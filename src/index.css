@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --color-velmesa-blue: #303188;
+  --color-velmesa-yellow: #E6B222;
+  --color-velmesa-purple: #6A41FA;
+  --color-velmesa-cyan: #90E8F8;
+  --color-velmesa-magenta: #E42EEA;
+  --color-velmesa-pink: #F6A992;
+  --color-velmesa-background: #ffffff;
+  --color-velmesa-text: #1a1a1a;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-outfit: "Outfit", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-velmesa-text bg-white overflow-x-hidden selection:bg-velmesa-yellow selection:text-white;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-outfit font-bold;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-6 py-2.5 bg-white border border-velmesa-yellow text-velmesa-blue rounded-full font-medium transition-all duration-300 hover:bg-velmesa-yellow hover:text-white flex items-center gap-2;
+  }
+}
+
+/* Custom Utilities */
+.text-balance {
+  text-wrap: balance;
+}
+
+.blob-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -10;
+  pointer-events: none;
+  background: radial-gradient(circle at center, #ffffff 0%, #f8faff 100%);
+}
+
+.blob-ambient-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+  pointer-events: none;
+}
