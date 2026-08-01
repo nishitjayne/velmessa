@@ -1,53 +1,104 @@
 @import "tailwindcss";
 
-@theme {
-  --color-velmesa-blue: #303188;
-  --color-velmesa-yellow: #E6B222;
-  --color-velmesa-purple: #6A41FA;
-  --color-velmesa-cyan: #90E8F8;
-  --color-velmesa-magenta: #E42EEA;
-  --color-velmesa-pink: #F6A992;
-  --color-velmesa-background: #ffffff;
-  --color-velmesa-text: #1a1a1a;
+/* ═══════════════════════════════════════════════
+   VELMESA – Global Styles & Blob Animation System
+   Glassmorphism + Aurora + Liquid Gradient Blobs
+   ═══════════════════════════════════════════════ */
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-outfit: "Outfit", sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+/* ── Base ── */
 @layer base {
   body {
-    @apply font-sans text-velmesa-text bg-white overflow-x-hidden selection:bg-velmesa-yellow selection:text-white;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-outfit font-bold;
-  }
-}
-
-@layer components {
-  .btn-primary {
-    @apply px-6 py-2.5 bg-white border border-velmesa-yellow text-velmesa-blue rounded-full font-medium transition-all duration-300 hover:bg-velmesa-yellow hover:text-white flex items-center gap-2;
+    background-color: #f8f9ff;
+    color: #303188;
+    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Custom Utilities */
-.text-balance {
-  text-wrap: balance;
-}
+/* ═══════════════════════════════════════════════
+   BLOB CANVAS – Fixed full-viewport container
+   ═══════════════════════════════════════════════ */
 
 .blob-canvas {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -10;
+  z-index: -1;
+  overflow: hidden;
   pointer-events: none;
-  background: radial-gradient(circle at center, #ffffff 0%, #f8faff 100%);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  isolation: isolate;
 }
 
+/* ── Ambient Glow ──
+   Multi-layered radial gradients that softly
+   pulse behind all blobs for cohesion */
 .blob-ambient-glow {
   position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(ellipse 65% 55% at 15% 15%, rgba(102, 126, 234, 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 65% at 85% 25%, rgba(240, 147, 251, 0.09) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 50% 85%, rgba(67, 233, 123, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 45% at 8% 65%, rgba(255, 230, 0, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 50% at 75% 70%, rgba(250, 112, 154, 0.07) 0%, transparent 60%);
+  animation: ambientPulse 35s ease-in-out infinite;
+}
+
+@keyframes ambientPulse {
+  0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  25%      { opacity: 0.88; transform: scale(1.03) rotate(0.5deg); }
+  50%      { opacity: 0.92; transform: scale(0.97) rotate(-0.3deg); }
+  75%      { opacity: 0.95; transform: scale(1.01) rotate(0.2deg); }
+}
+
+/* ═══════════════════════════════════════════════
+   BLOB SHAPE – The visible gradient shape
+
+   IMPORTANT: NO pseudo-elements on this element.
+   The filter:blur() lives on a parent wrapper div,
+   NOT on this element. This prevents the browser
+   from re-rasterizing blur when borderRadius morphs,
+   which was the root cause of flashing.
+   ═══════════════════════════════════════════════ */
+
+.blob-shape {
+  /* GPU layer promotion */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* Allow overflow for soft edges */
+  overflow: visible;
+}
+
+/* ═══════════════════════════════════════════════
+   NOISE TEXTURE OVERLAY
+   ═══════════════════════════════════════════════ */
+
+.bg-noise {
+  position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.5) 0%, transparent 100%);
+  z-index: 50;
   pointer-events: none;
+  opacity: 0.022;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ═══════════════════════════════════════════════
+   ACCESSIBILITY – Reduced Motion
+   ═══════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .blob-shape,
+  .blob-ambient-glow {
+    animation: none !important;
+    transition: none !important;
+  }
 }

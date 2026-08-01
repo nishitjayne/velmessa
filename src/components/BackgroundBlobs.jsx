@@ -56,9 +56,8 @@ const BlobElement = ({ config, scrollY, resp }) => {
   const floatXKeys = config.floatX.keyframes.map(v => v * motionScale);
   const floatYKeys = config.floatY.keyframes.map(v => v * motionScale);
 
-  const gradient = `linear-gradient(${config.gradientAngle}deg, ${config.gradientColors[0]}, ${config.gradientColors[1]}, ${config.gradientColors[2]})`;
-  const transitionBase = { ease: 'linear', repeat: Infinity, repeatType: 'loop' };
-  const smoothTransition = { ease: 'easeInOut', repeat: Infinity, repeatType: 'loop' };
+  const gradient = `linear-gradient(${config.gradientAngle}deg, ${config.gradientColors[0]} 0%, ${config.gradientColors[1]} 50%, ${config.gradientColors[2]} 100%)`;
+  const transitionBase = { ease: 'easeInOut', repeat: Infinity, repeatType: 'loop' };
 
   return (
     <motion.div
@@ -83,44 +82,19 @@ const BlobElement = ({ config, scrollY, resp }) => {
           scale: config.rotateScale.scale,
         }}
         transition={{
-          x: { ...smoothTransition, duration: config.floatX.duration },
-          y: { ...smoothTransition, duration: config.floatY.duration },
-          rotate: { ...smoothTransition, duration: config.rotateScale.duration },
-          scale: { ...smoothTransition, duration: config.rotateScale.duration },
+          x: { ...transitionBase, duration: config.floatX.duration },
+          y: { ...transitionBase, duration: config.floatY.duration },
+          rotate: { ...transitionBase, duration: config.rotateScale.duration },
+          scale: { ...transitionBase, duration: config.rotateScale.duration },
         }}
       >
         <div style={{ width: '100%', height: '100%', filter: `blur(${blurVal}px)` }}>
           <motion.div
             className="blob-shape"
-            style={{ 
-              width: '100%', 
-              height: '100%', 
-              opacity: config.opacity, 
-              background: gradient,
-              backgroundSize: '200% 200%',
-              position: 'relative',
-              overflow: 'hidden'
-            }}
-            animate={{ 
-              borderRadius: config.morph.keyframes,
-              backgroundPosition: ['0% 0%', '100% 100%', '0% 100%', '100% 0%', '0% 0%']
-            }}
-            transition={{ 
-              borderRadius: { ...smoothTransition, duration: config.morph.duration },
-              backgroundPosition: { ...transitionBase, duration: 15, ease: 'linear' }
-            }}
-          >
-            {/* Subtle radial depth overlay */}
-            <div 
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2) 0%, transparent 60%)',
-                mixBlendMode: 'overlay',
-                borderRadius: 'inherit'
-              }}
-            />
-          </motion.div>
+            style={{ width: '100%', height: '100%', opacity: config.opacity, background: gradient }}
+            animate={{ borderRadius: config.morph.keyframes }}
+            transition={{ borderRadius: { ...transitionBase, duration: config.morph.duration } }}
+          />
         </div>
       </motion.div>
     </motion.div>

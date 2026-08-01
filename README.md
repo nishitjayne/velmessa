@@ -8,6 +8,9 @@ A beautifully animated, highly interactive landing page built for Velmesa, featu
 - **Framer Motion** for butter-smooth scroll animations and idle state physics
 - **Vanilla CSS** for custom noise and background effects
 
+## 🌐 Live Demo
+- **[Velmesa on Vercel](https://velmessa.vercel.app/)**
+
 ## ✨ Key Features
 - **Scroll-Driven Organic Blobs**: Background elements dynamically morph, travel, and shrink as the user scrolls down the page.
 - **Premium Glassmorphism**: High-quality frosted glass effects over the animated backgrounds.
